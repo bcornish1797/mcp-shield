@@ -48,12 +48,13 @@ sleep 1
 echo -e "\033[1;36m$ mcp-shield start\033[0m"
 sleep 1
 
-# Start gateway in background
+# Start gateway in background (suppress verbose logs for clean demo)
 cd mcp-shield-output
-../bin/agentgateway-linux-amd64 -f gateway-config.yaml &
+../bin/agentgateway-linux-amd64 -f gateway-config.yaml > /dev/null 2>&1 &
 GW_PID=$!
 cd ..
 sleep 3
+echo "  ✅ Gateway started on port 3000"
 
 echo ""
 echo "  🔍 Step 5: Test security — unauthenticated request"
