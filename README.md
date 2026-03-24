@@ -4,6 +4,10 @@
 
 MCP servers typically run as direct stdio processes with zero security. MCP Shield scans your existing IDE configuration, generates a production-ready [agentgateway](https://github.com/agentgateway/agentgateway) setup with JWT authentication, rate limiting, and audit logging, and federates all your MCP servers behind a single secure endpoint.
 
+<p align="center">
+  <img src="demo/demo.svg" alt="MCP Shield Demo" width="800">
+</p>
+
 ## The Problem
 
 Most MCP deployments look like this:
