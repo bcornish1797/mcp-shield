@@ -1,5 +1,6 @@
 node_modules/
 dist/
+bin/
 mcp-shield-output/
 *.pem
 .firecrawl/
