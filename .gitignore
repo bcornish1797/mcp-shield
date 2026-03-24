@@ -1,1 +1,5 @@
-node_modules/\ndist/\nmcp-shield-output/\n*.pem
+node_modules/
+dist/
+mcp-shield-output/
+*.pem
+.firecrawl/
