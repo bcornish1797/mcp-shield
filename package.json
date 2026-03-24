@@ -9,14 +9,24 @@
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "test": "tsc && node dist/test/config-parser.test.js"
   },
   "files": [
     "dist",
     "README.md",
     "LICENSE"
   ],
-  "keywords": ["mcp", "security", "agentgateway", "ai-agents", "model-context-protocol", "rate-limiting", "jwt", "authentication"],
+  "keywords": [
+    "mcp",
+    "security",
+    "agentgateway",
+    "ai-agents",
+    "model-context-protocol",
+    "rate-limiting",
+    "jwt",
+    "authentication"
+  ],
   "author": "bcornish1797",
   "license": "MIT",
   "homepage": "https://github.com/bcornish1797/mcp-shield",

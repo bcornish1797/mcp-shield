@@ -1,6 +1,13 @@
 # MCP Shield
 
-**One-command security for MCP servers — powered by [agentgateway](https://agentgateway.dev)**
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D18-green.svg)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue.svg)](https://www.typescriptlang.org/)
+[![agentgateway](https://img.shields.io/badge/powered%20by-agentgateway-orange.svg)](https://agentgateway.dev)
+
+**SSL Labs for MCP servers — score, secure, and govern your MCP deployment in one command.**
+
+*Built for the [MCP & AI Agents Hackathon 2026](https://aihackathon.dev) — Secure & Govern MCP track.*
 
 MCP servers typically run as direct stdio processes with zero security. MCP Shield scans your existing IDE configuration, generates a production-ready [agentgateway](https://github.com/agentgateway/agentgateway) setup with JWT authentication, rate limiting, and audit logging, and federates all your MCP servers behind a single secure endpoint.
 
@@ -13,7 +20,7 @@ MCP servers typically run as direct stdio processes with zero security. MCP Shie
 Most MCP deployments look like this:
 
 ```
-[Claude Desktop / Cursor]
+[MCP Client (any IDE)]
      |        |        |
 [filesystem] [memory] [github]   ← No auth, no limits, no logging
 ```
@@ -26,7 +33,7 @@ Most MCP deployments look like this:
 ## The Solution
 
 ```
-[Claude Desktop / Cursor]
+[MCP Client (any IDE)]
           |
     [agentgateway]  ← JWT auth + rate limiting + audit logging
      /    |    \
@@ -41,11 +48,17 @@ MCP Shield generates all the configuration automatically.
 # Install
 npm install -g mcp-shield
 
-# Scan your current MCP setup
+# Score your current security posture
+mcp-shield score
+
+# Scan your MCP setup
 mcp-shield scan
 
 # Generate a secured configuration
 mcp-shield secure
+
+# Publish to agentregistry
+mcp-shield publish
 
 # Start the gateway
 mcp-shield start
@@ -56,9 +69,31 @@ mcp-shield verify
 
 ## Commands
 
+### `mcp-shield score`
+
+Assess the security posture of your MCP deployment with an A-F letter grade across 9 dimensions.
+
+```bash
+mcp-shield score
+mcp-shield score -f my-config.json
+```
+
+**Scoring dimensions** (100 points total):
+| Dimension | Weight | What it checks |
+|-----------|--------|----------------|
+| Authentication | 25 | JWT/OAuth token validation |
+| Rate Limiting | 15 | Token bucket protection |
+| Audit Logging | 15 | Request/response logging |
+| Endpoint Federation | 10 | Single gateway endpoint |
+| Transport Security | 10 | TLS/stdio isolation |
+| Input Validation | 10 | Tool argument sanitization |
+| CORS Policy | 5 | Cross-origin controls |
+| OAuth Discovery | 5 | .well-known metadata |
+| Server Isolation | 5 | Per-server RBAC |
+
 ### `mcp-shield scan`
 
-Discovers MCP server configurations from your IDE config files (Claude Desktop, Cursor, VS Code).
+Discovers MCP server configurations from your IDE config files (Cursor, VS Code, and others).
 
 ```bash
 # Auto-detect
