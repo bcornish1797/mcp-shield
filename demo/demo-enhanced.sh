@@ -29,7 +29,7 @@ echo ""
 echo -e "\033[1;33m  THE PROBLEM: Most MCP deployments have ZERO security\033[0m"
 echo ""
 sleep 2
-echo "  A typical Claude Desktop config:"
+echo "  A typical MCP client configuration (works with any MCP-compatible IDE):"
 echo ""
 sleep 1
 cat demo/sample-config.json | sed 's/^/  /'
