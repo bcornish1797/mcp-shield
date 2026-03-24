@@ -6,6 +6,7 @@ const scan_1 = require("./commands/scan");
 const secure_1 = require("./commands/secure");
 const start_1 = require("./commands/start");
 const verify_1 = require("./commands/verify");
+const publish_1 = require("./commands/publish");
 const program = new commander_1.Command();
 program
     .name("mcp-shield")
@@ -40,5 +41,13 @@ program
     .option("-u, --url <url>", "Gateway URL (default: http://localhost:3000)")
     .option("-c, --config <dir>", "Config directory for keys (default: ./mcp-shield-output)")
     .action(verify_1.verifyCommand);
+program
+    .command("publish")
+    .description("Register secured MCP servers with agentregistry")
+    .option("-f, --file <path>", "Path to MCP config file")
+    .option("-s, --source <type>", "Config source type")
+    .option("-c, --config <dir>", "Config directory (default: ./mcp-shield-output)")
+    .option("--arctl-bin <path>", "Path to arctl binary")
+    .action(publish_1.publishCommand);
 program.parse();
 //# sourceMappingURL=index.js.map

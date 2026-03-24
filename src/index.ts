@@ -5,6 +5,7 @@ import { scanCommand } from "./commands/scan";
 import { secureCommand } from "./commands/secure";
 import { startCommand } from "./commands/start";
 import { verifyCommand } from "./commands/verify";
+import { publishCommand } from "./commands/publish";
 
 const program = new Command();
 
@@ -45,5 +46,14 @@ program
   .option("-u, --url <url>", "Gateway URL (default: http://localhost:3000)")
   .option("-c, --config <dir>", "Config directory for keys (default: ./mcp-shield-output)")
   .action(verifyCommand);
+
+program
+  .command("publish")
+  .description("Register secured MCP servers with agentregistry")
+  .option("-f, --file <path>", "Path to MCP config file")
+  .option("-s, --source <type>", "Config source type")
+  .option("-c, --config <dir>", "Config directory (default: ./mcp-shield-output)")
+  .option("--arctl-bin <path>", "Path to arctl binary")
+  .action(publishCommand);
 
 program.parse();
