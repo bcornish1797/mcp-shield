@@ -44,13 +44,16 @@ echo -e "\033[1;33m  THE SOLUTION: MCP Shield + agentgateway\033[0m"
 echo ""
 sleep 2
 
-echo -e "\033[1;32m  Step 1: Scan your existing MCP setup\033[0m"
+echo -e "\033[1;32m  Step 1: Score your security posture\033[0m"
+type_and_wait "node dist/index.js score -f demo/sample-config.json"
+
+echo -e "\033[1;32m  Step 2: Scan your existing MCP setup\033[0m"
 type_and_wait "node dist/index.js scan -f demo/sample-config.json"
 
-echo -e "\033[1;32m  Step 2: Generate secured configuration\033[0m"
+echo -e "\033[1;32m  Step 3: Generate secured configuration\033[0m"
 type_and_wait "node dist/index.js secure -f demo/sample-config.json --rate-limit 60"
 
-echo -e "\033[1;32m  Step 3: Start the secured gateway\033[0m"
+echo -e "\033[1;32m  Step 4: Start the secured gateway\033[0m"
 echo ""
 echo -e "\033[1;36m$ mcp-shield start\033[0m"
 sleep 1
@@ -64,7 +67,7 @@ echo -e "  \033[1;32m✅ Gateway started on port 3000\033[0m"
 sleep 2
 
 echo ""
-echo -e "\033[1;32m  Step 4: Verify security\033[0m"
+echo -e "\033[1;32m  Step 5: Verify security\033[0m"
 echo ""
 echo -e "\033[1;36m  Testing unauthenticated request...\033[0m"
 sleep 1
