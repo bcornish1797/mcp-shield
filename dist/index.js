@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const commander_1 = require("commander");
 const scan_1 = require("./commands/scan");
 const secure_1 = require("./commands/secure");
+const start_1 = require("./commands/start");
+const verify_1 = require("./commands/verify");
 const program = new commander_1.Command();
 program
     .name("mcp-shield")
@@ -26,5 +28,17 @@ program
     .option("--rate-limit <rpm>", "Rate limit in requests per minute")
     .option("--no-generate-keys", "Skip JWT keypair generation")
     .action(secure_1.secureCommand);
+program
+    .command("start")
+    .description("Start the agentgateway with the generated secured configuration")
+    .option("-c, --config <dir>", "Config directory (default: ./mcp-shield-output)")
+    .option("--gateway-bin <path>", "Path to agentgateway binary")
+    .action(start_1.startCommand);
+program
+    .command("verify")
+    .description("Verify that the gateway is properly secured")
+    .option("-u, --url <url>", "Gateway URL (default: http://localhost:3000)")
+    .option("-c, --config <dir>", "Config directory for keys (default: ./mcp-shield-output)")
+    .action(verify_1.verifyCommand);
 program.parse();
 //# sourceMappingURL=index.js.map

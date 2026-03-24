@@ -51,7 +51,9 @@ class GatewayConfigGenerator {
      */
     generate() {
         const gatewayConfig = this.buildConfig();
-        return YAML.stringify(gatewayConfig, { indent: 2, lineWidth: 120 });
+        const doc = new YAML.Document(gatewayConfig);
+        doc.setSchema("1.1");
+        return doc.toString({ indent: 2, lineWidth: 120, defaultKeyType: "PLAIN", defaultStringType: "PLAIN" });
     }
     /**
      * Generate and write config to file.
@@ -73,16 +75,20 @@ class GatewayConfigGenerator {
      * Generate JWT keypair for testing.
      */
     static generateTestKeys(outputDir) {
-        const { publicKey, privateKey } = crypto.generateKeyPairSync("ec", {
+        const keyPair = crypto.generateKeyPairSync("ec", {
             namedCurve: "P-256",
             publicKeyEncoding: { type: "spki", format: "pem" },
             privateKeyEncoding: { type: "pkcs8", format: "pem" },
         });
         fs.mkdirSync(outputDir, { recursive: true });
-        const pubPath = path.join(outputDir, "pub-key.pem");
+        // Export public key as JWK and wrap in JWKS format for agentgateway
+        const pubKeyObj = crypto.createPublicKey(keyPair.publicKey);
+        const jwk = pubKeyObj.export({ format: "jwk" });
+        const jwks = { keys: [{ ...jwk, kid: "mcp-shield-key-1", use: "sig", alg: "ES256" }] };
+        const pubPath = path.join(outputDir, "pub-key");
         const privPath = path.join(outputDir, "priv-key.pem");
-        fs.writeFileSync(pubPath, publicKey);
-        fs.writeFileSync(privPath, privateKey);
+        fs.writeFileSync(pubPath, JSON.stringify(jwks, null, 2));
+        fs.writeFileSync(privPath, keyPair.privateKey);
         return { publicKeyPath: pubPath, privateKeyPath: privPath };
     }
     buildConfig() {
@@ -163,13 +169,18 @@ class GatewayConfigGenerator {
         if (this.config.security.auth.mode !== "permissive") {
             policies.mcpAuthentication = this.buildAuthPolicy();
         }
-        // Rate limiting
+        // Rate limiting (agentgateway uses localRateLimit as token bucket array)
         if (this.config.security.rateLimit) {
-            policies.rateLimit = {
-                requests: this.config.security.rateLimit.requestsPerMinute,
-                unit: "minute",
-                ...(this.config.security.rateLimit.burstSize ? { burst: this.config.security.rateLimit.burstSize } : {}),
-            };
+            const rpm = this.config.security.rateLimit.requestsPerMinute;
+            const burst = this.config.security.rateLimit.burstSize || rpm;
+            policies.localRateLimit = [
+                {
+                    maxTokens: Math.max(burst, rpm),
+                    tokensPerFill: rpm,
+                    fillInterval: "60s",
+                    type: "requests",
+                },
+            ];
         }
         return policies;
     }
@@ -187,8 +198,8 @@ class GatewayConfigGenerator {
             policy.jwks = { url: auth.jwksPath };
         }
         else {
-            // Default to generated test key
-            policy.jwks = { file: "./keys/pub-key.pem" };
+            // Default to generated test key (JWKS format)
+            policy.jwks = { file: "./keys/pub-key" };
         }
         policy.resourceMetadata = {
             resource: `http://${this.config.gateway.host}:${this.config.gateway.port}/mcp`,

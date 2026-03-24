@@ -3,6 +3,8 @@
 import { Command } from "commander";
 import { scanCommand } from "./commands/scan";
 import { secureCommand } from "./commands/secure";
+import { startCommand } from "./commands/start";
+import { verifyCommand } from "./commands/verify";
 
 const program = new Command();
 
@@ -29,5 +31,19 @@ program
   .option("--rate-limit <rpm>", "Rate limit in requests per minute")
   .option("--no-generate-keys", "Skip JWT keypair generation")
   .action(secureCommand);
+
+program
+  .command("start")
+  .description("Start the agentgateway with the generated secured configuration")
+  .option("-c, --config <dir>", "Config directory (default: ./mcp-shield-output)")
+  .option("--gateway-bin <path>", "Path to agentgateway binary")
+  .action(startCommand);
+
+program
+  .command("verify")
+  .description("Verify that the gateway is properly secured")
+  .option("-u, --url <url>", "Gateway URL (default: http://localhost:3000)")
+  .option("-c, --config <dir>", "Config directory for keys (default: ./mcp-shield-output)")
+  .action(verifyCommand);
 
 program.parse();
