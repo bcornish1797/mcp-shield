@@ -6,13 +6,14 @@ import { secureCommand } from "./commands/secure";
 import { startCommand } from "./commands/start";
 import { verifyCommand } from "./commands/verify";
 import { publishCommand } from "./commands/publish";
+import { scoreCommand } from "./commands/score";
 
 const program = new Command();
 
 program
   .name("mcp-shield")
   .description("One-command security for MCP servers — powered by agentgateway")
-  .version("0.1.0");
+  .version("1.0.0");
 
 program
   .command("scan")
@@ -55,5 +56,12 @@ program
   .option("-c, --config <dir>", "Config directory (default: ./mcp-shield-output)")
   .option("--arctl-bin <path>", "Path to arctl binary")
   .action(publishCommand);
+
+program
+  .command("score")
+  .description("Assess the security posture of your MCP deployment (A-F grade)")
+  .option("-f, --file <path>", "Path to MCP config file")
+  .option("-s, --source <type>", "Config source type")
+  .action(scoreCommand);
 
 program.parse();
